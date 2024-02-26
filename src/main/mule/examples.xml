@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sharepoint="http://www.mulesoft.org/schema/mule/sharepoint"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/sharepoint http://www.mulesoft.org/schema/mule/sharepoint/current/mule-sharepoint.xsd">
+	<flow name="procore-sharepoint-file-example-mule4Flow1" doc:id="88f55bf1-1461-4aee-aab2-c6db3df99297" >
+		<http:listener doc:name=":8081/list" doc:id="65f01a8b-0386-42c5-8852-b65181d66a51" config-ref="HTTP_Listener_config" path="/list"/>
+		<sharepoint:file-query doc:name="File query" doc:id="b80be178-9daf-46fb-9a00-51a50abc161d" config-ref="Sharepoint_Sharepoint_online" startingFolderPath="/sites/MuleDemo/Shared Documents/">
+			<sharepoint:query ><![CDATA[?$select=Name&$filter=timeLastModified ge datetime'2024-02-24T00:00:00Z']]></sharepoint:query>
+		</sharepoint:file-query>
+		<ee:transform doc:name="Transform Message" doc:id="69fb433d-e729-4d00-8e70-9ea05fb3d8b5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	
+	<flow name="procore-sharepoint-file-example-mule4Flow" doc:id="7a10bc97-a2f9-4b4f-9e13-175dd63ab25e" >
+		<http:listener doc:name=":8081/metadata" doc:id="a7068c6b-dbf1-4341-9d94-a6c53936e532" config-ref="HTTP_Listener_config" path="/metadata"/>
+		<sharepoint:get-metadata doc:name="Get metadata" doc:id="55f63560-1d6a-4ead-9850-f9f610ab1308" config-ref="Sharepoint_Sharepoint_online" fileServerRelativeUrl="/sites/MuleDemo/Shared Documents/customer.json"/>
+		<ee:transform doc:name="Transform Message" doc:id="532749bd-49b2-4e2c-8266-04bd42ccda85" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,16 @@
+keystore:
+  password: ""
+
+sharepoint:
+  clientId: ""
+  tokenUrl: ""
+  scope: ""
+  
+procore:
+  host: "sandbox.procore.com"
+  clientId: ""
+  clientSecret: ""
+  tokenUrl: "https://sandbox.procore.com/oauth/token"
+  companyId: ""
+  projectId: ""
+  
